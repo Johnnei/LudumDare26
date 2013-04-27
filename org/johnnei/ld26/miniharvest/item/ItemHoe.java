@@ -10,4 +10,14 @@ public class ItemHoe extends Item {
 		return ID;
 	}
 
+	@Override
+	public String getTextureName() {
+		return "hoe";
+	}
+	
+	@Override
+	public String getName() {
+		return "Hoe";
+	}
+
 }

@@ -1,12 +1,9 @@
 package org.johnnei.ld26.miniharvest.entity;
 
-import java.util.ArrayList;
-
 import org.johnnei.ld26.engine.GameKeyboard;
 import org.johnnei.ld26.engine.render.Texture;
 import org.johnnei.ld26.engine.render.VertexHelper;
 import org.johnnei.ld26.miniharvest.Map;
-import org.johnnei.ld26.miniharvest.item.Item;
 import org.johnnei.ld26.miniharvest.item.ItemGoldCoin;
 import org.johnnei.ld26.miniharvest.item.ItemHoe;
 import org.lwjgl.input.Keyboard;
@@ -17,14 +14,7 @@ public class Player extends Entity {
 	private final int MIN_ACTION_INTERVAL = 250;
 	private final int MIN_WARP_INTERVAL = 5000;
 	
-	/**
-	 * The items the player is carrying with him/her
-	 */
-	private ArrayList<Item> inventory;
-	/**
-	 * The currently selected item
-	 */
-	private int selectedItem;
+	private Inventory inventory;
 	/**
 	 * The index of the the currently shown texture
 	 */
@@ -58,38 +48,21 @@ public class Player extends Entity {
 		renderObject.updateVertex(new VertexHelper(x, y, 16f, 16f));
 		textureIndex = 3;
 		//Construct Player Data
-		inventory = new ArrayList<>();
-		inventory.add(new ItemGoldCoin(100));
-		inventory.add(new ItemHoe());
+		inventory = new Inventory();
+		inventory.addItem(new ItemGoldCoin(100));
+		inventory.addItem(new ItemHoe());
 	}
 
 	@Override
 	public void onTick(int deltaMs) {
 		onTickMovement(deltaMs);
 		onTickActions(deltaMs);
-		onTickInventory(deltaMs);
+		inventory.onTick(deltaMs);
 		//Warp
 		lastWarpAge += deltaMs;
 	}
 	
-	private void onTickInventory(int deltaMs) {
-		for(int i = 0; i < inventory.size(); i++) {
-			Item item = inventory.get(i);
-			item.onTick(deltaMs);
-			if(item.getAmount() == 0) {
-				inventory.remove(i);
-				i--;
-			}
-		}
-		if(GameKeyboard.getInstance().isKeyPressed(Keyboard.KEY_LEFT)) {
-			selectedItem--;
-			if(selectedItem < 0) {
-				selectedItem = inventory.size() - 1;
-			}
-		} else if(GameKeyboard.getInstance().isKeyPressed(Keyboard.KEY_RIGHT)) {
-			selectedItem = (selectedItem + 1) % inventory.size();
-		}
-	}
+	
 	
 	private void onTickMovement(int deltaMs) {
 		int textureIdx = 0;
@@ -113,6 +86,7 @@ public class Player extends Entity {
 		if(textureIdx != 0) {
 			textureIndex = textureIdx - 1;
 			
+			//Maintain within game field
 			if(x < 0)
 				x = 0;
 			if(x > 784)
@@ -130,7 +104,7 @@ public class Player extends Entity {
 		lastActionAge += deltaMs;
 		if(lastActionAge >= MIN_ACTION_INTERVAL) {
 			if(GameKeyboard.getInstance().isKeyPressed(Keyboard.KEY_SPACE)) {
-				map.getBlock(getBlockX(), getBlockY()).onPlayerInteraction(inventory.get(selectedItem));
+				map.getBlock(getBlockX(), getBlockY()).onPlayerInteraction(inventory.getSelectedItem());
 			}
 		}
 	}
@@ -139,6 +113,7 @@ public class Player extends Entity {
 	public void render() {
 		final int offset = (2 * 4 * 4) + (textureIndex * 2 * 4 * 4);
 		renderObject.render(offset);
+		inventory.render();
 	}
 	
 	public void warp(int x, int y) {

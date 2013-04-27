@@ -13,5 +13,19 @@ public class ItemGoldCoin extends Item {
 	public int getId() {
 		return ID;
 	}
+	
+	@Override
+	public String getTextureName() {
+		return "gold";
+	}
+	
+	@Override
+	public String getName() {
+		if(amount > 1) {
+			return "Gold Coins";
+		} else {
+			return "Gold Coin";
+		}
+	}
 
 }
