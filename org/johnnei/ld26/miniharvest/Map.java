@@ -148,6 +148,7 @@ public class Map {
 				entity.onDelete();
 				itemPickupEntities.remove(i);
 				i--;
+				continue;
 			}
 			//Check Pickup
 			if(player.getPoint().getSquaredDistanceTo(entity.getPoint()) <= ItemPickupEntity.PICKUP_RADIUS) {
