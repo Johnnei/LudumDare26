@@ -7,6 +7,7 @@ import org.johnnei.ld26.miniharvest.Map;
 import org.johnnei.ld26.miniharvest.item.Item;
 import org.johnnei.ld26.miniharvest.item.ItemGoldCoin;
 import org.johnnei.ld26.miniharvest.item.ItemHoe;
+import org.johnnei.ld26.miniharvest.item.ItemStack;
 import org.johnnei.ld26.miniharvest.item.ItemWheatSeed;
 import org.lwjgl.input.Keyboard;
 
@@ -51,9 +52,9 @@ public class Player extends Entity {
 		textureIndex = 3;
 		//Construct Player Data
 		inventory = new Inventory();
-		inventory.addItem(new ItemGoldCoin(100));
-		inventory.addItem(new ItemHoe());
-		inventory.addItem(new ItemWheatSeed());
+		addItem(new ItemGoldCoin(), 100);
+		addItem(new ItemHoe(), 1);
+		addItem(new ItemWheatSeed(), 1);
 	}
 
 	@Override
@@ -116,12 +117,12 @@ public class Player extends Entity {
 	 * Adds an item to the inventory of the player
 	 * @param item
 	 */
-	public void addItem(Item item) {
-		inventory.addItem(item);
+	public void addItem(Item item, int amount) {
+		inventory.addItem(new ItemStack(item, amount));
 	}
 	
 	public void addAmountToSelectedItem(int amount) {
-		Item item = inventory.getSelectedItem();
+		ItemStack item = inventory.getSelectedItemStack();
 		if(item != null) {
 			item.addToAmount(amount);
 		}
@@ -132,6 +133,22 @@ public class Player extends Entity {
 		this.x = x;
 		this.y = y;
 		renderObject.updateVertex(new VertexHelper(x, y, 16f, 16f));
+	}
+	
+	public int getGoldCount() {
+		ItemStack item = inventory.getItem(ItemGoldCoin.ID);
+		if(item != null) {
+			return item.getAmount();
+		} else {
+			return 0;
+		}
+	}
+	
+	public void addAmountToItem(int id, int amount) {
+		ItemStack item = inventory.getItem(id);
+		if(item != null) {
+			item.addToAmount(amount);
+		}
 	}
 	
 	public boolean canWarp() {

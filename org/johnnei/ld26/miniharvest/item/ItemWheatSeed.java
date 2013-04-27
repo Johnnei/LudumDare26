@@ -17,16 +17,12 @@ public class ItemWheatSeed extends ItemSeed {
 	
 	@Override
 	public String getName() {
-		if(amount > 1) {
-			return "Wheat Seeds";
-		} else {
-			return "Wheat Seed";
-		}
+		return "Wheat Seed";
 	}
 	
 	@Override
 	public Seed getSeed() {
-		return new Seed(new ItemGoldCoin(1), 5000, 1, 5);
+		return new Seed(new ItemGoldCoin(), 5000, 1, 5);
 	}
 
 }

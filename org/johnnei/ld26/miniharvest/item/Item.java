@@ -6,18 +6,11 @@ import org.johnnei.ld26.engine.render.Renderable;
 import org.johnnei.ld26.engine.render.VertexHelper;
 
 public abstract class Item extends Renderable {
-
-	protected int amount;
 	
-	public Item(int amount) {
+	public Item() {
 		super(VERTEX_TEXTURE);
 		renderObject.setTexture("/res/item/" + getTextureName() + ".png");
 		renderObject.updateTexture();
-		this.amount = amount;
-	}
-	
-	public Item() {
-		this(1);
 	}
 
 	public abstract int getId();
@@ -25,10 +18,6 @@ public abstract class Item extends Renderable {
 	public abstract String getName();
 	
 	public void onTick(int deltaMs) {
-	}
-	
-	public void addToAmount(int amount) {
-		this.amount += amount;
 	}
 	
 	public void setLocation(int x, float y, int width, int height) {
@@ -39,11 +28,5 @@ public abstract class Item extends Renderable {
 	public boolean canDelete() {
 		return false;
 	}
-	
-	public int getAmount() {
-		return amount;
-	}
-
-	
 	
 }

@@ -9,13 +9,14 @@ import org.johnnei.ld26.engine.render.Renderable;
 import org.johnnei.ld26.engine.render.TextRender;
 import org.johnnei.ld26.engine.render.VertexHelper;
 import org.johnnei.ld26.miniharvest.item.Item;
+import org.johnnei.ld26.miniharvest.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 
 public class Inventory extends Renderable {
 	
 	private final int MOVE_DOWN_INTERVAL = 5000;
 	
-	private ArrayList<Item> items;
+	private ArrayList<ItemStack> items;
 	private int selectedItem;
 	private int lastActionAge;
 	private float y;
@@ -33,10 +34,10 @@ public class Inventory extends Renderable {
 	 * Use old stacks first
 	 * @param item
 	 */
-	public void addItem(Item item) {
-		for(Item item2 : items) {
-			if(item2.getId() == item.getId()) {
-				item2.addToAmount(item.getAmount());
+	public void addItem(ItemStack item) {
+		for(ItemStack itemStack : items) {
+			if(itemStack.getId() == item.getId()) {
+				itemStack.addToAmount(item.getAmount());
 				return;
 			}
 		}
@@ -52,9 +53,9 @@ public class Inventory extends Renderable {
 	private void onInventoryTick(int deltaMs) {
 		lastActionAge += deltaMs;
 		for(int i = 0; i < items.size(); i++) {
-			Item item = items.get(i);
-			item.onTick(deltaMs);
-			if(item.getAmount() == 0) {
+			ItemStack itemStack = items.get(i);
+			itemStack.getItem().onTick(deltaMs);
+			if(itemStack.getAmount() == 0) {
 				items.remove(i);
 				if(i == selectedItem) {
 					selectedItem--;
@@ -82,7 +83,7 @@ public class Inventory extends Renderable {
 		renderObject.updateVertex(new VertexHelper(304, y, 192, 32));
 		int barIndex = 0;
 		for(int i = -2; i < 2; i++) {
-			Item item = items.get(getIndex(selectedItem - i));
+			Item item = items.get(getIndex(selectedItem - i)).getItem();
 			item.setLocation(320 + (barIndex * 32), y, 32, 32);
 			barIndex++;
 		}
@@ -95,15 +96,15 @@ public class Inventory extends Renderable {
 	@Override
 	public void render() {
 		super.render();
-		for(Item item : items) {
-			item.render();
+		for(ItemStack itemStack : items) {
+			itemStack.getItem().render();
 		}
 		if(items.size() > 0) {
-			Item item = items.get(selectedItem);
-			if(item.getAmount() > 1) {
-				TextRender.getInstance().drawCentered(400, y - 20, item.getAmount() + " " + item.getName(), null);
+			ItemStack itemStack = items.get(selectedItem);
+			if(itemStack.getAmount() > 1) {
+				TextRender.getInstance().drawCentered(400, y - 20, itemStack.getAmount() + " " + itemStack.getName(), null);
 			} else {
-				TextRender.getInstance().drawCentered(400, y - 20, item.getName(), null);
+				TextRender.getInstance().drawCentered(400, y - 20, itemStack.getName(), null);
 			}
 		}
 	}
@@ -112,12 +113,34 @@ public class Inventory extends Renderable {
 	public boolean canDelete() {
 		return false;
 	}
+	
+	/**
+	 * Gets an item from the inventory
+	 * @param id The id of the item to find
+	 * @return an item with the same id or null if not found
+	 */
+	public ItemStack getItem(int id) {
+		for(ItemStack itemStack : items) {
+			if(itemStack.getId() == id) {
+				return itemStack;
+			}
+		}
+		return null;
+	}
 
-	public Item getSelectedItem() {
+	public ItemStack getSelectedItemStack() {
 		if(items.size() == 0) {
 			return null;
 		} else {
 			return items.get(selectedItem);
+		}
+	}
+	
+	public Item getSelectedItem() {
+		if(items.size() == 0) {
+			return null;
+		} else {
+			return items.get(selectedItem).getItem();
 		}
 	}
 

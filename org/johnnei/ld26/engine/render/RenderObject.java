@@ -186,6 +186,7 @@ public class RenderObject {
 			glBufferSubData(GL_ARRAY_BUFFER, bufferOffset[OFFSET_TEXTURE], texture.fillBuffer());
 		} else {
 			System.err.println("RenderObject.updateTexture() No texture data defined");
+			new Exception().printStackTrace();
 		}
 	}
 	

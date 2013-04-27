@@ -7,11 +7,18 @@ import java.util.ArrayList;
 
 import org.johnnei.ld26.miniharvest.entity.Entity;
 import org.johnnei.ld26.miniharvest.entity.Player;
+import org.johnnei.ld26.miniharvest.item.Item;
 import org.johnnei.ld26.miniharvest.item.ItemPickupEntity;
+import org.johnnei.ld26.miniharvest.item.ItemStack;
+import org.johnnei.ld26.miniharvest.item.ItemWheatSeed;
+import org.johnnei.ld26.miniharvest.shop.Shop;
+import org.johnnei.ld26.miniharvest.shop.ShopItem;
 import org.johnnei.ld26.miniharvest.world.Block;
+import org.johnnei.ld26.miniharvest.world.BlockBanner;
 import org.johnnei.ld26.miniharvest.world.BlockDirt;
 import org.johnnei.ld26.miniharvest.world.BlockGrass;
 import org.johnnei.ld26.miniharvest.world.BlockRoad;
+import org.johnnei.ld26.miniharvest.world.BlockShop;
 
 public class Map {
 	
@@ -22,6 +29,11 @@ public class Map {
 	 */
 	private Block[] mapData;
 	/**
+	 * All shop info on the map (Max 10 shops)
+	 */
+	private Shop[] shops; 
+	private int shopIdx;
+	/**
 	 * Points on the map which shift to another place
 	 */
 	private ArrayList<ExitPoint> exitPoints;
@@ -31,6 +43,8 @@ public class Map {
 		mapData = new Block[WIDTH * HEIGHT];
 		exitPoints = new ArrayList<>();
 		itemPickupEntities = new ArrayList<>();
+		shops = new Shop[10];
+		shopIdx = 0;
 	}
 	
 	public void load(String name) {
@@ -64,6 +78,31 @@ public class Map {
 						block = new BlockRoad(this, x, y, spot - 2);
 						break;
 						
+					case 10:
+					case 11:
+						Shop shop = new Shop();
+						shops[shopIdx++] = shop;
+						block = new BlockShop(this, x, y, spot - 10, shop);
+						break;
+						
+					case 14: //Wheat Seed Stall Banner
+						//Custom Block Setting
+						setBlock(x - 2, y - 1, new BlockBanner(this, x - 2, y - 1, 0, "wheat"));
+						setBlock(x - 1, y - 1, new BlockBanner(this, x - 1, y - 1, 1, "wheat"));
+						setBlock(x    , y - 1, new BlockBanner(this, x    , y - 1, 2, "wheat"));
+						setBlock(x - 2, y    , new BlockBanner(this, x - 2, y    , 3, "wheat"));
+						setBlock(x - 1, y    , new BlockBanner(this, x - 1, y    , 4, "wheat"));
+						block = new BlockBanner(this, x, y, 5, "wheat");
+						break;
+						
+					case 15: //Potato Seed Stall Banner
+						//Custom Block Setting
+						setBlock(x - 1, y - 2, new BlockBanner(this, x - 1, y - 2, 0, "potato", true));
+						setBlock(x - 1, y - 1, new BlockBanner(this, x - 1, y - 1, 1, "potato", true));
+						setBlock(x - 1, y    , new BlockBanner(this, x - 1, y    , 2, "potato", true));
+						setBlock(x    , y - 2, new BlockBanner(this, x    , y - 2, 3, "potato", true));
+						setBlock(x    , y - 1, new BlockBanner(this, x    , y - 1, 4, "potato", true));
+						block = new BlockBanner(this, x, y, 5, "potato", true);
 					}
 					
 					if(block != null) {
@@ -71,6 +110,8 @@ public class Map {
 					}
 				}
 			}
+			//Reset Index Pointers
+			shopIdx = 0;
 			//Load Extra Info about map
 			String dataLine = null;
 			while((dataLine = input.readLine()) != null) {
@@ -84,6 +125,14 @@ public class Map {
 					int y2 = Integer.parseInt(subData[3]);
 					String mapName = subData[4];
 					exitPoints.add(new ExitPoint(x, y, x2, y2, mapName));
+					break;
+					
+				case "shop":
+					int itemId = Integer.parseInt(subData[0]);
+					int cost = Integer.parseInt(subData[1]);
+					int rechargeRate = Integer.parseInt(subData[2]);
+					Item item = getShopItem(itemId);
+					shops[shopIdx++].setShop(new ShopItem(new ItemStack(item, 0), cost), rechargeRate);
 					break;
 					
 					default:
@@ -106,6 +155,13 @@ public class Map {
 			} catch (IOException e) {
 			}
 		}
+	}
+	
+	private Item getShopItem(int id) {
+		if(id == ItemWheatSeed.ID) {
+			return new ItemWheatSeed();
+		}
+		throw new IllegalArgumentException("Unsupported Shop Item");
 	}
 	
 	public void setBlock(int x, int y, Block block) {
@@ -157,7 +213,7 @@ public class Map {
 				entity.onDelete();
 				itemPickupEntities.remove(i);
 				i--;
-				player.addItem(entity.getItem());
+				player.addItem(entity.getItem(), 1);
 			}
 		}
 	}

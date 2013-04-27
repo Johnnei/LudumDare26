@@ -3,10 +3,6 @@ package org.johnnei.ld26.miniharvest.item;
 
 public class ItemGoldCoin extends Item {
 
-	public ItemGoldCoin(int amount) {
-		super(amount);
-	}
-
 	public static final int ID = 0;
 	
 	@Override
@@ -21,11 +17,7 @@ public class ItemGoldCoin extends Item {
 	
 	@Override
 	public String getName() {
-		if(amount > 1) {
-			return "Gold Coins";
-		} else {
-			return "Gold Coin";
-		}
+		return "Gold Coin";
 	}
 
 }
