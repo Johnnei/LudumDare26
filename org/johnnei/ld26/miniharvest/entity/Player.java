@@ -4,8 +4,10 @@ import org.johnnei.ld26.engine.GameKeyboard;
 import org.johnnei.ld26.engine.render.Texture;
 import org.johnnei.ld26.engine.render.VertexHelper;
 import org.johnnei.ld26.miniharvest.Map;
+import org.johnnei.ld26.miniharvest.item.Item;
 import org.johnnei.ld26.miniharvest.item.ItemGoldCoin;
 import org.johnnei.ld26.miniharvest.item.ItemHoe;
+import org.johnnei.ld26.miniharvest.item.ItemWheatSeed;
 import org.lwjgl.input.Keyboard;
 
 public class Player extends Entity {
@@ -51,6 +53,7 @@ public class Player extends Entity {
 		inventory = new Inventory();
 		inventory.addItem(new ItemGoldCoin(100));
 		inventory.addItem(new ItemHoe());
+		inventory.addItem(new ItemWheatSeed());
 	}
 
 	@Override
@@ -87,14 +90,7 @@ public class Player extends Entity {
 			textureIndex = textureIdx - 1;
 			
 			//Maintain within game field
-			if(x < 0)
-				x = 0;
-			if(x > 784)
-				x = 784;
-			if(y < 0)
-				y = 0;
-			if(y > 584)
-				y = 584;
+			clipCoordinates();
 			
 			renderObject.updateVertex(new VertexHelper(x, y, 16f, 16f));
 		}
@@ -114,6 +110,14 @@ public class Player extends Entity {
 		final int offset = (2 * 4 * 4) + (textureIndex * 2 * 4 * 4);
 		renderObject.render(offset);
 		inventory.render();
+	}
+	
+	/**
+	 * Adds an item to the inventory of the player
+	 * @param item
+	 */
+	public void addItem(Item item) {
+		inventory.addItem(item);
 	}
 	
 	public void warp(int x, int y) {

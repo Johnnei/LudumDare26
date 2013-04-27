@@ -24,7 +24,7 @@ public class MiniHarvest implements IGame {
 	@Override
 	public void onTick(int deltaMs) {
 		player.onTick(deltaMs);
-		currentMap.onTick(deltaMs);
+		currentMap.onTick(deltaMs, player);
 		currentMap.checkForExit(this, player);
 	}
 

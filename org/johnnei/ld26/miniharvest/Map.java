@@ -5,7 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.johnnei.ld26.miniharvest.entity.Entity;
 import org.johnnei.ld26.miniharvest.entity.Player;
+import org.johnnei.ld26.miniharvest.item.ItemPickupEntity;
 import org.johnnei.ld26.miniharvest.world.Block;
 import org.johnnei.ld26.miniharvest.world.BlockDirt;
 import org.johnnei.ld26.miniharvest.world.BlockGrass;
@@ -23,10 +25,12 @@ public class Map {
 	 * Points on the map which shift to another place
 	 */
 	private ArrayList<ExitPoint> exitPoints;
+	private ArrayList<ItemPickupEntity> itemPickupEntities;
 	
 	public Map() {
 		mapData = new Block[WIDTH * HEIGHT];
 		exitPoints = new ArrayList<>();
+		itemPickupEntities = new ArrayList<>();
 	}
 	
 	public void load(String name) {
@@ -127,15 +131,40 @@ public class Map {
 		}
 	}
 	
-	public void onTick(int deltaMs) {
+	public void addPickupEntity(ItemPickupEntity itemPickup) {
+		itemPickupEntities.add(itemPickup);
+	}
+	
+	public void onTick(int deltaMs, Player player) {
 		for(Block block : mapData) {
 			block.onTick(deltaMs);
+		}
+		for(int i = 0; i < itemPickupEntities.size(); i++) {
+			//Normal onTick
+			ItemPickupEntity entity = itemPickupEntities.get(i);
+			entity.onTick(deltaMs);
+			//Check Deletion
+			if(entity.getLifetime() >= ItemPickupEntity.MAX_LIFETIME) {
+				entity.onDelete();
+				itemPickupEntities.remove(i);
+				i--;
+			}
+			//Check Pickup
+			if(player.getPoint().getSquaredDistanceTo(entity.getPoint()) <= ItemPickupEntity.PICKUP_RADIUS) {
+				entity.onDelete();
+				itemPickupEntities.remove(i);
+				i--;
+				player.addItem(entity.getItem());
+			}
 		}
 	}
 	
 	public void render() {
 		for(Block block : mapData) {
 			block.render();
+		}
+		for(Entity entity : itemPickupEntities) {
+			entity.render();
 		}
 	}
 

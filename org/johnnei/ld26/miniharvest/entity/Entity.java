@@ -2,6 +2,7 @@ package org.johnnei.ld26.miniharvest.entity;
 
 import static org.johnnei.ld26.engine.render.RenderObject.VERTEX_TEXTURE;
 
+import org.johnnei.ld26.engine.math.Point;
 import org.johnnei.ld26.engine.render.Renderable;
 import org.johnnei.ld26.miniharvest.Map;
 
@@ -24,6 +25,17 @@ public abstract class Entity extends Renderable {
 	@Override
 	public boolean canDelete() {
 		return false;
+	}
+	
+	protected void clipCoordinates() {
+		if(x < 0)
+			x = 0;
+		if(x > 784)
+			x = 784;
+		if(y < 0)
+			y = 0;
+		if(y > 584)
+			y = 584;
 	}
 	
 	/**
@@ -64,6 +76,10 @@ public abstract class Entity extends Renderable {
 	
 	public void setY(float y) {
 		this.y = y;
+	}
+	
+	public Point getPoint() {
+		return new Point(x, y);
 	}
 
 }
