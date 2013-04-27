@@ -25,8 +25,8 @@ public class ItemPickupEntity extends Entity {
 		this.item = item;
 		
 		Random rand = new Random();
-		motionX = rand.nextFloat() * 0.001f;
-		motionY = rand.nextFloat() * 0.001f;
+		motionX = 0.001f * rand.nextInt(50);
+		motionY = 0.001f * rand.nextInt(50);
 		if(rand.nextBoolean())
 			motionX = -motionX;
 		if(rand.nextBoolean())
@@ -43,6 +43,7 @@ public class ItemPickupEntity extends Entity {
 		x += motionX;
 		y += motionY;
 		clipCoordinates();
+		renderObject.updateVertex(new VertexHelper(x, y, 16f, 16f));
 	}
 	
 	public Item getItem() {

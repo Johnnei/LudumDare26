@@ -56,6 +56,9 @@ public class Inventory extends Renderable {
 			item.onTick(deltaMs);
 			if(item.getAmount() == 0) {
 				items.remove(i);
+				if(i == selectedItem) {
+					selectedItem--;
+				}
 				i--;
 			}
 		}

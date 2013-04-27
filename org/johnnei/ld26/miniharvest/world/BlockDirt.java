@@ -2,6 +2,7 @@ package org.johnnei.ld26.miniharvest.world;
 
 import org.johnnei.ld26.engine.render.VertexHelper;
 import org.johnnei.ld26.miniharvest.Map;
+import org.johnnei.ld26.miniharvest.entity.Player;
 import org.johnnei.ld26.miniharvest.item.Item;
 import org.johnnei.ld26.miniharvest.item.ItemHoe;
 
@@ -20,7 +21,7 @@ public class BlockDirt extends Block {
 	}
 	
 	@Override
-	public void onPlayerInteraction(Item item) {
+	public void onPlayerInteraction(Player player, Item item) {
 		if(item.getId() == ItemHoe.ID) {
 			map.setBlock(x, y, new BlockFarmDirt(map, x, y));
 			renderObject.delete();

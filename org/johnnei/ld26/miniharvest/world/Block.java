@@ -4,6 +4,7 @@ import static org.johnnei.ld26.engine.render.RenderObject.VERTEX_TEXTURE;
 
 import org.johnnei.ld26.engine.render.Renderable;
 import org.johnnei.ld26.miniharvest.Map;
+import org.johnnei.ld26.miniharvest.entity.Player;
 import org.johnnei.ld26.miniharvest.item.Item;
 
 public abstract class Block extends Renderable {
@@ -25,7 +26,7 @@ public abstract class Block extends Renderable {
 		renderObject.render();
 	}
 	
-	public void onPlayerInteraction(Item item) {
+	public void onPlayerInteraction(Player player, Item item) {
 	}
 	
 	@Override

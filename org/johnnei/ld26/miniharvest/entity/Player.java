@@ -100,7 +100,7 @@ public class Player extends Entity {
 		lastActionAge += deltaMs;
 		if(lastActionAge >= MIN_ACTION_INTERVAL) {
 			if(GameKeyboard.getInstance().isKeyPressed(Keyboard.KEY_SPACE)) {
-				map.getBlock(getBlockX(), getBlockY()).onPlayerInteraction(inventory.getSelectedItem());
+				map.getBlock(getBlockX(), getBlockY()).onPlayerInteraction(this, inventory.getSelectedItem());
 			}
 		}
 	}
@@ -118,6 +118,13 @@ public class Player extends Entity {
 	 */
 	public void addItem(Item item) {
 		inventory.addItem(item);
+	}
+	
+	public void addAmountToSelectedItem(int amount) {
+		Item item = inventory.getSelectedItem();
+		if(item != null) {
+			item.addToAmount(amount);
+		}
 	}
 	
 	public void warp(int x, int y) {
