@@ -41,6 +41,10 @@ public class Seed {
 		return growProduct;
 	}
 	
+	/**
+	 * Gets a randomized dropcount between the min (inclusive) and max (exclusive)
+	 * @return
+	 */
 	public int getDropCount() {
 		return minDropCount + new Random().nextInt(maxDorpCount - minDropCount);
 	}

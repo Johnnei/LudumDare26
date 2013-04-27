@@ -59,6 +59,8 @@ public class Map {
 					case 3:
 					case 4:
 					case 5:
+					case 6:
+					case 7:
 						block = new BlockRoad(this, x, y, spot - 2);
 						break;
 						
