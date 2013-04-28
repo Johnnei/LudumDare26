@@ -14,7 +14,7 @@ public class Player extends Entity {
 	
 	private final float MOVE_SPEED = 0.03F;
 	private final int MIN_ACTION_INTERVAL = 250;
-	private final int MIN_WARP_INTERVAL = 5000;
+	private final int MIN_WARP_INTERVAL = 3000;
 	
 	private Inventory inventory;
 	/**

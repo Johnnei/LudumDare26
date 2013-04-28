@@ -6,7 +6,6 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
@@ -97,31 +96,40 @@ public class Texture {
 	}
 
 	private void loadTexture(String file) {
-		try {
-			// Load Texture
-			InputStream in = Texture.class.getResourceAsStream(file);
-			PNGDecoder decoder = new PNGDecoder(in);
-
-			width = decoder.getWidth();
-			height = decoder.getHeight();
-
-			ByteBuffer buffer = BufferUtils
-					.createByteBuffer(4 * width * height);
-			decoder.decode(buffer, decoder.getWidth() * 4, Format.RGBA);
-			buffer.flip();
-			in.close();
-
-			// Register Texture
-			glActiveTexture(GL_TEXTURE0);
-			glTextureId = glGenTextures();
-			glBindTexture(GL_TEXTURE_2D, glTextureId);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, decoder.getWidth(),
-					decoder.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-			glBindTexture(GL_TEXTURE_2D, 0);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(0);
+		if(TextureManager.getInstance().contains(file)) {
+			TextureInfo info = TextureManager.getInstance().get(file);
+			info.addToCount();
+			glTextureId = info.getId();
+			width = info.getWidth();
+			height = info.getHeight();
+		} else {
+			try {
+				// Load Texture
+				InputStream in = Texture.class.getResourceAsStream(file);
+				PNGDecoder decoder = new PNGDecoder(in);
+	
+				width = decoder.getWidth();
+				height = decoder.getHeight();
+	
+				ByteBuffer buffer = BufferUtils
+						.createByteBuffer(4 * width * height);
+				decoder.decode(buffer, decoder.getWidth() * 4, Format.RGBA);
+				buffer.flip();
+				in.close();
+	
+				// Register Texture
+				glActiveTexture(GL_TEXTURE0);
+				glTextureId = glGenTextures();
+				glBindTexture(GL_TEXTURE_2D, glTextureId);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, decoder.getWidth(),
+						decoder.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+				glBindTexture(GL_TEXTURE_2D, 0);
+				TextureManager.getInstance().put(file, glTextureId, width, height);
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.exit(0);
+			}
 		}
 	}
 
@@ -147,7 +155,7 @@ public class Texture {
 	 * Releases the ID for this texture
 	 */
 	public void delete() {
-		glDeleteTextures(glTextureId);
+		TextureManager.getInstance().remove(glTextureId);
 	}
 
 	public int getWidth() {

@@ -3,6 +3,8 @@ package org.johnnei.ld26.miniharvest;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.johnnei.ld26.engine.Game;
+
 public class MapManager {
 	
 	private HashMap<String, Map> mapList;
@@ -11,8 +13,10 @@ public class MapManager {
 	public MapManager() {
 		mapList = new HashMap<>();
 		
+		long startTime = Game.getCurrentMillis();
 		load("farm");
 		load("town");
+		System.out.println("Load: " + (Game.getCurrentMillis() - startTime) + "ms");
 	}
 	
 	private void load(String mapName) {
