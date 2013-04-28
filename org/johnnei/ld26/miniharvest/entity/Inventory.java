@@ -35,6 +35,7 @@ public class Inventory extends Renderable {
 	 * @param item
 	 */
 	public void addItem(ItemStack item) {
+		lastActionAge = 0;
 		for(ItemStack itemStack : items) {
 			if(itemStack.getId() == item.getId()) {
 				itemStack.addToAmount(item.getAmount());
@@ -51,35 +52,35 @@ public class Inventory extends Renderable {
 	}
 	
 	private void onInventoryTick(int deltaMs) {
-		lastActionAge += deltaMs;
+		//lastActionAge += deltaMs;
 		for(int i = 0; i < items.size(); i++) {
 			ItemStack itemStack = items.get(i);
 			itemStack.getItem().onTick(deltaMs);
 			if(itemStack.getAmount() == 0) {
 				items.remove(i);
 				if(i == selectedItem) {
-					updateSelectedItem(selectedItem - 1);
+					selectedItem = checkIndex(selectedItem - 1);
 				}
 				i--;
 			}
 		}
 		if(GameKeyboard.getInstance().isKeyPressed(Keyboard.KEY_LEFT)) {
-			updateSelectedItem(selectedItem - 1);
+			selectedItem = checkIndex(selectedItem - 1);
 			lastActionAge = 0;
 		} else if(GameKeyboard.getInstance().isKeyPressed(Keyboard.KEY_RIGHT)) {
-			updateSelectedItem(selectedItem + 1);
+			selectedItem = checkIndex(selectedItem + 1);
 			lastActionAge = 0;
 		}
 	}
 	
-	private void updateSelectedItem(int newSelectedItem) {
+	private int checkIndex(int newSelectedItem) {
 		while(newSelectedItem < 0) {
 			newSelectedItem += items.size();
 		}
 		while(newSelectedItem >= items.size()) {
 			newSelectedItem -= items.size();
 		}
-		selectedItem = newSelectedItem;
+		return newSelectedItem;
 	}
 	
 	private void onRenderTick() {
@@ -89,17 +90,22 @@ public class Inventory extends Renderable {
 			moveY = 0;
 		y = 568 + moveY;
 		renderObject.updateVertex(new VertexHelper(304, y, 192, 32));
-		//Item slots
-		int barIndex = 0;
-		for(int i = -2; i < 2; i++) {
-			Item item = items.get(getIndex(selectedItem - i)).getItem();
-			item.setLocation(320 + (barIndex * 32), y, 32, 32);
-			barIndex++;
+		//Hide all Items
+		if(items.size() > 5) {
+			for(int i = 0; i < items.size(); i++) {
+				items.get(i).getItem().setLocation(-64, 0, 32, 32);
+			}
 		}
-	}
-	
-	private int getIndex(int i) {
-		return Math.abs(i % items.size());
+		int barIndex = 0;
+		int minItemOffset = -2;
+		if(items.size() == 3) {
+			minItemOffset++;
+		}
+		//Show Item in hotbar if should be visible
+		for(int itemOffset = 2; itemOffset >= minItemOffset; itemOffset--, barIndex++) {
+			Item item = items.get(checkIndex(selectedItem - itemOffset)).getItem();
+			item.setLocation(320 + (barIndex * 32), y, 32, 32);
+		}
 	}
 	
 	@Override
@@ -116,6 +122,11 @@ public class Inventory extends Renderable {
 				TextRender.getInstance().drawCentered(400, y - 20, itemStack.getName(), null);
 			}
 		}
+	}
+	
+
+	public void resetLastAction() {
+		lastActionAge = 0;
 	}
 	
 	@Override

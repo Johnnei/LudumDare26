@@ -16,7 +16,8 @@ public class SellShop {
 				-1, //Wheat Seed
 				75, //Wheat
 				-1, //Potato Seed
-				90 //Potato
+				90, //Potato
+				-1, //Plow
 		};
 	}
 	

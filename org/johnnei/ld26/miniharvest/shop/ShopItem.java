@@ -11,6 +11,7 @@ public class ShopItem {
 	
 	public ShopItem(ItemStack stock, int cost) {
 		this.stock = stock;
+		this.stock.addToAmount(1);
 		this.cost = cost;
 	}
 	

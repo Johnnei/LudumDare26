@@ -9,6 +9,7 @@ import org.johnnei.ld26.miniharvest.entity.Entity;
 import org.johnnei.ld26.miniharvest.entity.Player;
 import org.johnnei.ld26.miniharvest.item.Item;
 import org.johnnei.ld26.miniharvest.item.ItemPickupEntity;
+import org.johnnei.ld26.miniharvest.item.ItemPlow;
 import org.johnnei.ld26.miniharvest.item.ItemPotatoSeed;
 import org.johnnei.ld26.miniharvest.item.ItemStack;
 import org.johnnei.ld26.miniharvest.item.ItemWheatSeed;
@@ -89,35 +90,24 @@ public class Map {
 						
 					case 14: //Wheat Seed Stall Banner
 						//Custom Block Setting
-						setBlock(x - 2, y - 1, new BlockBanner(this, x - 2, y - 1, 0, "wheat"));
-						setBlock(x - 1, y - 1, new BlockBanner(this, x - 1, y - 1, 1, "wheat"));
-						setBlock(x    , y - 1, new BlockBanner(this, x    , y - 1, 2, "wheat"));
-						setBlock(x - 2, y    , new BlockBanner(this, x - 2, y    , 3, "wheat"));
-						setBlock(x - 1, y    , new BlockBanner(this, x - 1, y    , 4, "wheat"));
-						block = new BlockBanner(this, x, y, 5, "wheat");
+						spawnHorizontalShop(x, y, "wheat");
 						break;
 						
 					case 15: //Potato Seed Stall Banner
 						//Custom Block Setting
-						setBlock(x - 1, y - 2, new BlockBanner(this, x - 1, y - 2, 0, "potato", true));
-						setBlock(x - 1, y - 1, new BlockBanner(this, x - 1, y - 1, 1, "potato", true));
-						setBlock(x - 1, y    , new BlockBanner(this, x - 1, y    , 2, "potato", true));
-						setBlock(x    , y - 2, new BlockBanner(this, x    , y - 2, 3, "potato", true));
-						setBlock(x    , y - 1, new BlockBanner(this, x    , y - 1, 4, "potato", true));
-						block = new BlockBanner(this, x, y, 5, "potato", true);
+						spawnVerticalShop(x, y, "potato");
 						break;
 						
-					case 16:
-						setBlock(x - 2, y - 1, new BlockBanner(this, x - 2, y - 1, 0, "sell"));
-						setBlock(x - 1, y - 1, new BlockBanner(this, x - 1, y - 1, 1, "sell"));
-						setBlock(x    , y - 1, new BlockBanner(this, x    , y - 1, 2, "sell"));
-						setBlock(x - 2, y    , new BlockBanner(this, x - 2, y    , 3, "sell"));
-						setBlock(x - 1, y    , new BlockBanner(this, x - 1, y    , 4, "sell"));
-						block = new BlockBanner(this, x, y, 5, "sell");
+					case 16: //
+						spawnHorizontalShop(x, y, "sell");
 						break;
+						
 					case 17:
 						block = new BlockSellShop(this, x, y);
 						break;
+						
+					case 18: //Plow Stall
+						spawnHorizontalShop(x, y, "plow");
 					}
 					
 					if(block != null) {
@@ -172,6 +162,24 @@ public class Map {
 		}
 	}
 	
+	private void spawnHorizontalShop(int x, int y, String bannerName) {
+		setBlock(x - 2, y - 1, new BlockBanner(this, x - 2, y - 1, 0, bannerName));
+		setBlock(x - 1, y - 1, new BlockBanner(this, x - 1, y - 1, 1, bannerName));
+		setBlock(x    , y - 1, new BlockBanner(this, x    , y - 1, 2, bannerName));
+		setBlock(x - 2, y    , new BlockBanner(this, x - 2, y    , 3, bannerName));
+		setBlock(x - 1, y    , new BlockBanner(this, x - 1, y    , 4, bannerName));
+		setBlock(x    , y    , new BlockBanner(this, x    , y    , 5, bannerName));
+	}
+	
+	private void spawnVerticalShop(int x, int y, String bannerName) {
+		setBlock(x - 1, y - 2, new BlockBanner(this, x - 1, y - 2, 0, bannerName, true));
+		setBlock(x - 1, y - 1, new BlockBanner(this, x - 1, y - 1, 1, bannerName, true));
+		setBlock(x - 1, y    , new BlockBanner(this, x - 1, y    , 2, bannerName, true));
+		setBlock(x    , y - 2, new BlockBanner(this, x    , y - 2, 3, bannerName, true));
+		setBlock(x    , y - 1, new BlockBanner(this, x    , y - 1, 4, bannerName, true));
+		setBlock(x    , y    , new BlockBanner(this, x    , y    , 5, bannerName, true));
+	}
+	
 	private Item getShopItem(int id) {
 		switch(id) {
 		
@@ -180,6 +188,9 @@ public class Map {
 			
 		case ItemPotatoSeed.ID:
 			return new ItemPotatoSeed();
+			
+		case ItemPlow.ID:
+			return new ItemPlow();
 			
 			default:
 				throw new IllegalArgumentException("Unsupported Shop Item");

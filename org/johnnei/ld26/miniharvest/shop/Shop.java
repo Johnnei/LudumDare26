@@ -24,9 +24,11 @@ public class Shop {
 		lastRestockAge += deltaMs;
 		
 		//Check Restocking
-		if(lastRestockAge >= stockRechargeRate || (!shopStock.hasStock() && lastRestockAge >= (stockRechargeRate / 2))) {
-			lastRestockAge = 0;
-			shopStock.addToStock(1);
+		if(stockRechargeRate > 0) { //< 0 disables restocking
+			if(lastRestockAge >= stockRechargeRate || (!shopStock.hasStock() && lastRestockAge >= (stockRechargeRate / 2))) {
+				lastRestockAge = 0;
+				shopStock.addToStock(1);
+			}
 		}
 	}
 	

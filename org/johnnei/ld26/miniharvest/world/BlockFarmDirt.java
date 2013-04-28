@@ -1,5 +1,7 @@
 package org.johnnei.ld26.miniharvest.world;
 
+import java.util.Random;
+
 import org.johnnei.ld26.engine.render.VertexHelper;
 import org.johnnei.ld26.miniharvest.Map;
 import org.johnnei.ld26.miniharvest.entity.Player;
@@ -24,7 +26,11 @@ public class BlockFarmDirt extends Block {
 	public void onTick(int deltaMs) {
 		lifetime += deltaMs;
 		if(lifetime >= DECAY_TIME) {
-			map.setBlock(x, y, new BlockDirt(map, x, y));
+			if(new Random().nextBoolean()) {
+				map.setBlock(x, y, new BlockDirt(map, x, y));
+			} else {
+				map.setBlock(x, y, new BlockGrass(map, x, y));
+			}
 			renderObject.delete();
 		}
 	}
