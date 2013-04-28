@@ -1,5 +1,8 @@
 package org.johnnei.ld26.miniharvest.item;
 
+import org.johnnei.ld26.engine.sound.SoundManager;
+import org.johnnei.ld26.miniharvest.MiniHarvest;
+
 public class ItemPlow extends Item {
 
 	public static final int ID = 6;
@@ -19,6 +22,9 @@ public class ItemPlow extends Item {
 		return "Spade";
 	}
 	
-	
+	@Override
+	public void onUse() {
+		SoundManager.getInstance().playSound(MiniHarvest.SOUND_ITEM_PLOW);
+	}
 
 }

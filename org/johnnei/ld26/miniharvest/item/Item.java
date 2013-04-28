@@ -20,6 +20,9 @@ public abstract class Item extends Renderable {
 	public void onTick(int deltaMs) {
 	}
 	
+	public void onUse() {
+	}
+	
 	public void setLocation(int x, float y, int width, int height) {
 		renderObject.updateVertex(new VertexHelper(x, y, width, height));
 	}

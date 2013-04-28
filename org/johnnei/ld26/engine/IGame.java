@@ -7,5 +7,7 @@ public interface IGame {
 	public void onTick(int deltaMs);
 	
 	public void render();
+	
+	public void cleanup();
 
 }

@@ -117,5 +117,9 @@ public class TextRender {
 	public static int getTextHeight() {
 		return 16;
 	}
+	
+	public void cleanup() {
+		textRenderer.delete(true);
+	}
 
 }

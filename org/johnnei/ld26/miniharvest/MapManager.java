@@ -38,4 +38,10 @@ public class MapManager {
 		}
 	}
 
+	public void cleanup() {
+		for(Entry<String, Map> map : mapList.entrySet()) {
+			map.getValue().onDelete();
+		}
+	}
+
 }

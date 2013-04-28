@@ -42,11 +42,11 @@ public class Seed {
 	}
 	
 	/**
-	 * Gets a randomized dropcount between the min (inclusive) and max (exclusive)
+	 * Gets a randomized dropcount between the min (inclusive) and max (inclusive)
 	 * @return
 	 */
 	public int getDropCount() {
-		return minDropCount + new Random().nextInt(maxDorpCount - minDropCount);
+		return minDropCount + new Random().nextInt(maxDorpCount - minDropCount + 1);
 	}
 
 }

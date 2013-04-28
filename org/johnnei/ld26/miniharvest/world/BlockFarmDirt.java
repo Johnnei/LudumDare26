@@ -3,7 +3,9 @@ package org.johnnei.ld26.miniharvest.world;
 import java.util.Random;
 
 import org.johnnei.ld26.engine.render.VertexHelper;
+import org.johnnei.ld26.engine.sound.SoundManager;
 import org.johnnei.ld26.miniharvest.Map;
+import org.johnnei.ld26.miniharvest.MiniHarvest;
 import org.johnnei.ld26.miniharvest.entity.Player;
 import org.johnnei.ld26.miniharvest.item.Item;
 import org.johnnei.ld26.miniharvest.item.ItemSeed;
@@ -42,6 +44,7 @@ public class BlockFarmDirt extends Block {
 			map.setBlock(x, y, new BlockFarmSeeded(seed.getSeed(), map, x, y));
 			renderObject.delete();
 			player.addAmountToSelectedItem(-1);
+			SoundManager.getInstance().playSound(MiniHarvest.SOUND_PLANT_SEED);
 		}
 	}
 

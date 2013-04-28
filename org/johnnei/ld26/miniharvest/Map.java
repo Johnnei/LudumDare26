@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.johnnei.ld26.engine.sound.SoundManager;
 import org.johnnei.ld26.miniharvest.entity.Entity;
 import org.johnnei.ld26.miniharvest.entity.Player;
 import org.johnnei.ld26.miniharvest.item.Item;
@@ -260,6 +261,7 @@ public class Map {
 				itemPickupEntities.remove(i);
 				i--;
 				player.addItem(entity.getItem(), 1);
+				SoundManager.getInstance().playSound(MiniHarvest.SOUND_ENTITY_PICKUP);
 			}
 		}
 	}
@@ -294,6 +296,15 @@ public class Map {
 			entity.render();
 		}
 		getBlock(player.getBlockX(), player.getBlockY()).renderOnPlayerStandOn(player);
+	}
+
+	public void onDelete() {
+		for(Block block : mapData) {
+			block.onDelete();
+		}
+		for(Entity entity : itemPickupEntities) {
+			entity.onDelete();
+		}
 	}
 
 }

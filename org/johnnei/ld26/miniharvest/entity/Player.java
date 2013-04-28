@@ -8,7 +8,6 @@ import org.johnnei.ld26.miniharvest.item.Item;
 import org.johnnei.ld26.miniharvest.item.ItemGoldCoin;
 import org.johnnei.ld26.miniharvest.item.ItemHoe;
 import org.johnnei.ld26.miniharvest.item.ItemStack;
-import org.johnnei.ld26.miniharvest.item.ItemWheatSeed;
 import org.lwjgl.input.Keyboard;
 
 public class Player extends Entity {
@@ -52,9 +51,8 @@ public class Player extends Entity {
 		textureIndex = 3;
 		//Construct Player Data
 		inventory = new Inventory();
-		addItem(new ItemGoldCoin(), 1000);
+		addItem(new ItemGoldCoin(), 100);
 		addItem(new ItemHoe(), 1);
-		addItem(new ItemWheatSeed(), 1);
 	}
 
 	@Override
@@ -101,7 +99,11 @@ public class Player extends Entity {
 		lastActionAge += deltaMs;
 		if(lastActionAge >= MIN_ACTION_INTERVAL) {
 			if(GameKeyboard.getInstance().isKeyPressed(Keyboard.KEY_SPACE)) {
-				map.getBlock(getBlockX(), getBlockY()).onPlayerInteraction(this, inventory.getSelectedItem());
+				Item item = inventory.getSelectedItem();
+				if(item != null) {
+					map.getBlock(getBlockX(), getBlockY()).onPlayerInteraction(this, inventory.getSelectedItem());
+					item.onUse();
+				}
 			}
 		}
 	}
@@ -111,6 +113,12 @@ public class Player extends Entity {
 		final int offset = (2 * 4 * 4) + (textureIndex * 2 * 4 * 4);
 		renderObject.render(offset);
 		inventory.render();
+	}
+	
+	@Override
+	public void onDelete() {
+		inventory.onDelete();
+		super.onDelete();
 	}
 	
 	/**

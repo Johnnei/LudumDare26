@@ -44,7 +44,7 @@ public class Texture {
 		limitSize = false;
 		loadTexture(filename);
 	}
-	
+
 	public void addSubTexture(int x, int y, int width, int height) {
 		textures.add(new Rectangle(x, y, width, height));
 	}
@@ -56,27 +56,28 @@ public class Texture {
 	 *            The buffer to add the mappings to
 	 */
 	public void fillBuffer(FloatBuffer buffer) {
-		if(textures.size() == 0) {
-			buffer.put(new float[] { 0F, 1F, 1F, 1F, 1F, 0F, 0F, 0F});
+		if (textures.size() == 0) {
+			buffer.put(new float[] { 0F, 1F, 1F, 1F, 1F, 0F, 0F, 0F });
 		} else {
-			for(Rectangle texture : textures) {
-				float x = (float)texture.getX() * (1F / width);
-				float tWidth = (float)texture.getWidth() * (1F / width);
-				float tHeight = (float)texture.getHeight() * (1F / height);
-				float y = (float)texture.getY() * (1F / height);
-				if(limitSize) {
-					if(x + tWidth > 1F) {
+			for (Rectangle texture : textures) {
+				float x = (float) texture.getX() * (1F / width);
+				float tWidth = (float) texture.getWidth() * (1F / width);
+				float tHeight = (float) texture.getHeight() * (1F / height);
+				float y = (float) texture.getY() * (1F / height);
+				if (limitSize) {
+					if (x + tWidth > 1F) {
 						tWidth = 1F - x;
 					}
-					if(y + tHeight > 1F) {
+					if (y + tHeight > 1F) {
 						tHeight = 1F - y;
 					}
 				}
-				buffer.put(new float[] { x, y + tHeight, x + tWidth, y + tHeight, x + tWidth, y, x, y });
+				buffer.put(new float[] { x, y + tHeight, x + tWidth,
+						y + tHeight, x + tWidth, y, x, y });
 			}
 		}
 	}
-	
+
 	public FloatBuffer fillBuffer() {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(getBufferSize());
 		fillBuffer(buffer);
@@ -87,9 +88,9 @@ public class Texture {
 	public void bind() {
 		glBindTexture(GL_TEXTURE_2D, glTextureId);
 	}
-	
+
 	public int getBufferSize() {
-		if(textures.size() == 0)
+		if (textures.size() == 0)
 			return 8;
 		else
 			return textures.size() * 8;
@@ -100,11 +101,12 @@ public class Texture {
 			// Load Texture
 			InputStream in = Texture.class.getResourceAsStream(file);
 			PNGDecoder decoder = new PNGDecoder(in);
-			
+
 			width = decoder.getWidth();
 			height = decoder.getHeight();
-			
-			ByteBuffer buffer = BufferUtils.createByteBuffer(4 * width * height);
+
+			ByteBuffer buffer = BufferUtils
+					.createByteBuffer(4 * width * height);
 			decoder.decode(buffer, decoder.getWidth() * 4, Format.RGBA);
 			buffer.flip();
 			in.close();
@@ -114,29 +116,33 @@ public class Texture {
 			glTextureId = glGenTextures();
 			glBindTexture(GL_TEXTURE_2D, glTextureId);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, decoder.getWidth(), decoder.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, decoder.getWidth(),
+					decoder.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 			glBindTexture(GL_TEXTURE_2D, 0);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
 	}
-	
+
 	/**
 	 * Enables or disabled <tt>limitSize</tt>.<br/>
-	 * When enabled the newly added subtextures added with <tt>addSubTexture(int, int, int, int)</tt> can not wrap outside the texture
+	 * When enabled the newly added subtextures added with
+	 * <tt>addSubTexture(int, int, int, int)</tt> can not wrap outside the
+	 * texture
+	 * 
 	 * @param enabled
 	 */
 	public void setSizeLimit(boolean enabled) {
 		limitSize = enabled;
 	}
-	
+
 	public void setParameter(int parameter, int value) {
 		glActiveTexture(GL_TEXTURE0);
 		bind();
 		glTexParameteri(GL_TEXTURE_2D, parameter, value);
 	}
-	
+
 	/**
 	 * Releases the ID for this texture
 	 */
@@ -147,7 +153,7 @@ public class Texture {
 	public int getWidth() {
 		return width;
 	}
-	
+
 	public int getHeight() {
 		return height;
 	}

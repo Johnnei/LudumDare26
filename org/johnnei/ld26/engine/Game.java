@@ -14,7 +14,9 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 
 import org.johnnei.ld26.engine.render.TextRender;
+import org.johnnei.ld26.engine.sound.SoundManager;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -38,6 +40,7 @@ public class Game {
 	 */
 	public void run() {
 		initOpenGL();
+		initOpenAL();
 		TextRender.getInstance();
 		game.init();
 		long lastTick = getCurrentMillis();
@@ -76,6 +79,9 @@ public class Game {
 				lastFps += 1000;
 			}
 		}
+		
+		cleanupGL();
+		cleanupAL();
 	}
 
 	/**
@@ -98,6 +104,29 @@ public class Game {
 			if ((ms - timeSlept) > 0)
 				sleep(ms - timeSlept);
 		}
+	}
+	
+	/**
+	 * Prepare the sound library
+	 */
+	private void initOpenAL() {
+		try {
+			AL.create();
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+	
+	private void cleanupGL() {		
+		TextRender.getInstance().cleanup();
+		game.cleanup();
+		Display.destroy();
+	}
+	
+	private void cleanupAL() {
+		SoundManager.getInstance().cleanup();
+		AL.destroy();
 	}
 
 	/**

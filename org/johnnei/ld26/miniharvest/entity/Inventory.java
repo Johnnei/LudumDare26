@@ -52,7 +52,7 @@ public class Inventory extends Renderable {
 	}
 	
 	private void onInventoryTick(int deltaMs) {
-		//lastActionAge += deltaMs;
+		lastActionAge += deltaMs;
 		for(int i = 0; i < items.size(); i++) {
 			ItemStack itemStack = items.get(i);
 			itemStack.getItem().onTick(deltaMs);
@@ -129,6 +129,14 @@ public class Inventory extends Renderable {
 
 	public void resetLastAction() {
 		lastActionAge = 0;
+	}
+	
+	@Override
+	public void onDelete() {
+		super.onDelete();
+		for(ItemStack itemStack : items) {
+			itemStack.getItem().onDelete();
+		}
 	}
 	
 	@Override

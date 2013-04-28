@@ -1,5 +1,7 @@
 package org.johnnei.ld26.miniharvest.shop;
 
+import org.johnnei.ld26.engine.sound.SoundManager;
+import org.johnnei.ld26.miniharvest.MiniHarvest;
 import org.johnnei.ld26.miniharvest.entity.Player;
 import org.johnnei.ld26.miniharvest.item.ItemGoldCoin;
 import org.johnnei.ld26.miniharvest.item.ItemStack;
@@ -23,6 +25,7 @@ public class ShopItem {
 		if(p.getGoldCount() >= cost) {
 			p.addAmountToItem(ItemGoldCoin.ID, -cost);
 			p.addItem(stock.getItem(), 1);
+			SoundManager.getInstance().playSound(MiniHarvest.SOUND_SHOP_BUY);
 		}
 	}
 	
