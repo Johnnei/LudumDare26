@@ -2,6 +2,9 @@ package org.johnnei.ld26.miniharvest.world;
 
 import org.johnnei.ld26.engine.render.VertexHelper;
 import org.johnnei.ld26.miniharvest.Map;
+import org.johnnei.ld26.miniharvest.entity.Player;
+import org.johnnei.ld26.miniharvest.item.Item;
+import org.johnnei.ld26.miniharvest.item.ItemPlow;
 
 public class BlockGrass extends Block {
 	
@@ -15,8 +18,14 @@ public class BlockGrass extends Block {
 
 	@Override
 	public void onTick(int deltaMs) {
-		// TODO Auto-generated method stub
-
+	}
+	
+	@Override
+	public void onPlayerInteraction(Player player, Item item) {
+		if(map.canSpade() && item.getId() == ItemPlow.ID) {
+			map.setBlock(x, y, new BlockDirt(map, x, y));
+			onDelete();
+		}
 	}
 
 }

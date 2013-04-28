@@ -100,6 +100,8 @@ public class Inventory extends Renderable {
 		int minItemOffset = -2;
 		if(items.size() == 3) {
 			minItemOffset++;
+		} else if(items.size() == 2) {
+			minItemOffset += 2;
 		}
 		//Show Item in hotbar if should be visible
 		for(int itemOffset = 2; itemOffset >= minItemOffset; itemOffset--, barIndex++) {

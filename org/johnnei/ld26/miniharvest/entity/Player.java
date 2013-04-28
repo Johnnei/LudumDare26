@@ -52,7 +52,7 @@ public class Player extends Entity {
 		textureIndex = 3;
 		//Construct Player Data
 		inventory = new Inventory();
-		addItem(new ItemGoldCoin(), 100);
+		addItem(new ItemGoldCoin(), 1000);
 		addItem(new ItemHoe(), 1);
 		addItem(new ItemWheatSeed(), 1);
 	}

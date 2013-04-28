@@ -37,6 +37,10 @@ public class Map {
 	private Shop[] shops; 
 	private int shopIdx;
 	/**
+	 * If the player is allowed to spade on gras tiles
+	 */
+	private boolean canSpade;
+	/**
 	 * Points on the map which shift to another place
 	 */
 	private ArrayList<ExitPoint> exitPoints;
@@ -48,6 +52,7 @@ public class Map {
 		itemPickupEntities = new ArrayList<>();
 		shops = new Shop[10];
 		shopIdx = 0;
+		canSpade = false;
 	}
 	
 	public void load(String name) {
@@ -140,6 +145,10 @@ public class Map {
 					shops[shopIdx++].setShop(new ShopItem(new ItemStack(item, 0), cost), rechargeRate);
 					break;
 					
+				case "canspade":
+					canSpade = true;
+					break;
+					
 					default:
 						System.err.println("Unknown extra info: " + data[0].toLowerCase());
 						for(String s : data) {
@@ -199,6 +208,10 @@ public class Map {
 	
 	public void setBlock(int x, int y, Block block) {
 		mapData[y * WIDTH + x] = block;
+	}
+	
+	public boolean canSpade() {
+		return canSpade;
 	}
 	
 	public Block getBlock(int x, int y) {
