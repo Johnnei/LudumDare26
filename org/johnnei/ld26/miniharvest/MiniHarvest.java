@@ -26,11 +26,12 @@ public class MiniHarvest implements IGame {
 		player.onTick(deltaMs);
 		currentMap.onTick(deltaMs, player);
 		currentMap.checkForExit(this, player);
+		mapManager.onQuickTick(deltaMs);
 	}
 
 	@Override
 	public void render() {
-		currentMap.render();
+		currentMap.render(player);
 		player.render();
 	}
 	

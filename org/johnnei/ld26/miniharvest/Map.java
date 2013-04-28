@@ -9,6 +9,7 @@ import org.johnnei.ld26.miniharvest.entity.Entity;
 import org.johnnei.ld26.miniharvest.entity.Player;
 import org.johnnei.ld26.miniharvest.item.Item;
 import org.johnnei.ld26.miniharvest.item.ItemPickupEntity;
+import org.johnnei.ld26.miniharvest.item.ItemPotatoSeed;
 import org.johnnei.ld26.miniharvest.item.ItemStack;
 import org.johnnei.ld26.miniharvest.item.ItemWheatSeed;
 import org.johnnei.ld26.miniharvest.shop.Shop;
@@ -18,6 +19,7 @@ import org.johnnei.ld26.miniharvest.world.BlockBanner;
 import org.johnnei.ld26.miniharvest.world.BlockDirt;
 import org.johnnei.ld26.miniharvest.world.BlockGrass;
 import org.johnnei.ld26.miniharvest.world.BlockRoad;
+import org.johnnei.ld26.miniharvest.world.BlockSellShop;
 import org.johnnei.ld26.miniharvest.world.BlockShop;
 
 public class Map {
@@ -103,6 +105,19 @@ public class Map {
 						setBlock(x    , y - 2, new BlockBanner(this, x    , y - 2, 3, "potato", true));
 						setBlock(x    , y - 1, new BlockBanner(this, x    , y - 1, 4, "potato", true));
 						block = new BlockBanner(this, x, y, 5, "potato", true);
+						break;
+						
+					case 16:
+						setBlock(x - 2, y - 1, new BlockBanner(this, x - 2, y - 1, 0, "sell"));
+						setBlock(x - 1, y - 1, new BlockBanner(this, x - 1, y - 1, 1, "sell"));
+						setBlock(x    , y - 1, new BlockBanner(this, x    , y - 1, 2, "sell"));
+						setBlock(x - 2, y    , new BlockBanner(this, x - 2, y    , 3, "sell"));
+						setBlock(x - 1, y    , new BlockBanner(this, x - 1, y    , 4, "sell"));
+						block = new BlockBanner(this, x, y, 5, "sell");
+						break;
+					case 17:
+						block = new BlockSellShop(this, x, y);
+						break;
 					}
 					
 					if(block != null) {
@@ -158,10 +173,17 @@ public class Map {
 	}
 	
 	private Item getShopItem(int id) {
-		if(id == ItemWheatSeed.ID) {
+		switch(id) {
+		
+		case ItemWheatSeed.ID:
 			return new ItemWheatSeed();
+			
+		case ItemPotatoSeed.ID:
+			return new ItemPotatoSeed();
+			
+			default:
+				throw new IllegalArgumentException("Unsupported Shop Item");
 		}
-		throw new IllegalArgumentException("Unsupported Shop Item");
 	}
 	
 	public void setBlock(int x, int y, Block block) {
@@ -218,13 +240,36 @@ public class Map {
 		}
 	}
 	
-	public void render() {
+	/**
+	 * Map updates on which the player is not currently available
+	 * @param deltaMs
+	 */
+	public void onQuickTick(int deltaMs) {
+		for(Block block : mapData) {
+			block.onTick(deltaMs);
+		}
+		for(int i = 0; i < itemPickupEntities.size(); i++) {
+			//Normal onTick
+			ItemPickupEntity entity = itemPickupEntities.get(i);
+			entity.onTick(deltaMs);
+			//Check Deletion
+			if(entity.getLifetime() >= ItemPickupEntity.MAX_LIFETIME) {
+				entity.onDelete();
+				itemPickupEntities.remove(i);
+				i--;
+				continue;
+			}
+		}
+	}
+	
+	public void render(Player player) {
 		for(Block block : mapData) {
 			block.render();
 		}
 		for(Entity entity : itemPickupEntities) {
 			entity.render();
 		}
+		getBlock(player.getBlockX(), player.getBlockY()).renderOnPlayerStandOn(player);
 	}
 
 }

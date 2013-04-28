@@ -58,29 +58,38 @@ public class Inventory extends Renderable {
 			if(itemStack.getAmount() == 0) {
 				items.remove(i);
 				if(i == selectedItem) {
-					selectedItem--;
+					updateSelectedItem(selectedItem - 1);
 				}
 				i--;
 			}
 		}
 		if(GameKeyboard.getInstance().isKeyPressed(Keyboard.KEY_LEFT)) {
+			updateSelectedItem(selectedItem - 1);
 			lastActionAge = 0;
-			selectedItem--;
-			if(selectedItem < 0) {
-				selectedItem = items.size() - 1;
-			}
 		} else if(GameKeyboard.getInstance().isKeyPressed(Keyboard.KEY_RIGHT)) {
-			selectedItem = (selectedItem + 1) % items.size();
+			updateSelectedItem(selectedItem + 1);
 			lastActionAge = 0;
 		}
 	}
 	
+	private void updateSelectedItem(int newSelectedItem) {
+		while(newSelectedItem < 0) {
+			newSelectedItem += items.size();
+		}
+		while(newSelectedItem >= items.size()) {
+			newSelectedItem -= items.size();
+		}
+		selectedItem = newSelectedItem;
+	}
+	
 	private void onRenderTick() {
+		//Hotbar Position
 		float moveY = 0.05f * (lastActionAge - MOVE_DOWN_INTERVAL);
 		if(moveY < 0)
 			moveY = 0;
 		y = 568 + moveY;
 		renderObject.updateVertex(new VertexHelper(304, y, 192, 32));
+		//Item slots
 		int barIndex = 0;
 		for(int i = -2; i < 2; i++) {
 			Item item = items.get(getIndex(selectedItem - i)).getItem();
@@ -99,7 +108,7 @@ public class Inventory extends Renderable {
 		for(ItemStack itemStack : items) {
 			itemStack.getItem().render();
 		}
-		if(items.size() > 0) {
+		if(items.size() > 0 && selectedItem < items.size() && selectedItem >= 0) {
 			ItemStack itemStack = items.get(selectedItem);
 			if(itemStack.getAmount() > 1) {
 				TextRender.getInstance().drawCentered(400, y - 20, itemStack.getAmount() + " " + itemStack.getName(), null);

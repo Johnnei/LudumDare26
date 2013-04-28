@@ -18,6 +18,21 @@ public class ShopItem {
 		stock.addToAmount(amount);
 	}
 	
+	public void buy(Player p) {
+		if(p.getGoldCount() >= cost) {
+			p.addAmountToItem(ItemGoldCoin.ID, -cost);
+			p.addItem(stock.getItem(), 1);
+		}
+	}
+	
+	public int getCost() {
+		return cost;
+	}
+	
+	public String getName() {
+		return stock.getName();
+	}
+	
 	public boolean hasStock() {
 		return stock.getAmount() > 0;
 	}
@@ -26,12 +41,8 @@ public class ShopItem {
 		return stock.getAmount();
 	}
 	
-	public void buy(Player p) {
-		if(p.getGoldCount() >= cost) {
-			p.addAmountToItem(ItemGoldCoin.ID, -cost);
-			p.addItem(stock.getItem(), 1);
-		}
-	}
+
+	
 	
 
 }

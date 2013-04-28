@@ -22,11 +22,10 @@ public abstract class Block extends Renderable {
 	
 	public abstract void onTick(int deltaMs);
 	
-	public void render() {
-		renderObject.render();
+	public void onPlayerInteraction(Player player, Item item) {
 	}
 	
-	public void onPlayerInteraction(Player player, Item item) {
+	public void renderOnPlayerStandOn(Player player) {
 	}
 	
 	@Override

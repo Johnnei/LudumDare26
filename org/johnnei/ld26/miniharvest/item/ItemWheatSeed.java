@@ -22,7 +22,7 @@ public class ItemWheatSeed extends ItemSeed {
 	
 	@Override
 	public Seed getSeed() {
-		return new Seed(new ItemGoldCoin(), 5000, 1, 5);
+		return new Seed(new ItemWheat(), 30000, 1, 4);
 	}
 
 }

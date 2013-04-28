@@ -8,7 +8,7 @@ import org.johnnei.ld26.miniharvest.entity.Entity;
 
 public class ItemPickupEntity extends Entity {
 	
-	public static final int MAX_LIFETIME = /*5 * 60000*/5000;
+	public static final int MAX_LIFETIME = 5 * 60000;
 	/**
 	 * The SQUARED pickup radius (This avoids the cpu cost of rooting :D)
 	 */
