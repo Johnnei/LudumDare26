@@ -10,6 +10,7 @@ import org.johnnei.ld26.engine.sound.SoundManager;
 import org.johnnei.ld26.miniharvest.entity.Entity;
 import org.johnnei.ld26.miniharvest.entity.Player;
 import org.johnnei.ld26.miniharvest.item.Item;
+import org.johnnei.ld26.miniharvest.item.ItemCarrotSeed;
 import org.johnnei.ld26.miniharvest.item.ItemPickupEntity;
 import org.johnnei.ld26.miniharvest.item.ItemPlow;
 import org.johnnei.ld26.miniharvest.item.ItemPotatoSeed;
@@ -122,6 +123,10 @@ public class Map {
 					case 19: //Town Banner
 						spawnHorizontalBanner(x, y, "town");
 						break;
+						
+					case 20: //Carrot Stall
+						spawnHorizontalBanner(x, y, "carrot");
+						break;
 					}
 					
 					if(block != null) {
@@ -209,6 +214,9 @@ public class Map {
 			
 		case ItemPlow.ID:
 			return new ItemPlow();
+			
+		case ItemCarrotSeed.ID:
+			return new ItemCarrotSeed();
 			
 			default:
 				throw new IllegalArgumentException("Unsupported Shop Item");
