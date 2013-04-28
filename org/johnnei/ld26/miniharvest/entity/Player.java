@@ -157,6 +157,10 @@ public class Player extends Entity {
 		return inventory.getSelectedItem(); 
 	}
 	
+	public void addAmountToItem(ItemStack itemStack) {
+		inventory.addItem(itemStack);
+	}
+	
 	public void addAmountToItem(int id, int amount) {
 		ItemStack item = inventory.getItem(id);
 		if(item != null) {

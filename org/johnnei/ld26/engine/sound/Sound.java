@@ -14,8 +14,6 @@ import static org.lwjgl.openal.AL10.alSourceStop;
 import static org.lwjgl.openal.AL10.alSourcei;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 import org.lwjgl.util.WaveData;
 
@@ -25,32 +23,16 @@ public class Sound {
 	private int source;
 	
 	public Sound(String filename) {
-		//Load Buffer
-		FileInputStream inputStream = null;
-		try {
-			inputStream = new FileInputStream("bin/res/sound/" + filename + ".wav");
-			WaveData data = WaveData.create(new BufferedInputStream(inputStream));
-			buffer = alGenBuffers();
-			alBufferData(buffer, data.format, data.data, data.samplerate);
-			data.dispose();
-			
-			//Prepare Source
-			source = alGenSources();
-			alSourcei(source, AL_BUFFER, buffer);
-			alSource3f(source, AL_POSITION, 0f, 0f, 0f);
-			alSource3f(source, AL_VELOCITY, 0f, 0f, 0f);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		} finally {
-			if(inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					
-				}
-			}
-		}
+		WaveData data = WaveData.create(new BufferedInputStream(Sound.class.getResourceAsStream("/res/sound/" + filename + ".wav")));
+		buffer = alGenBuffers();
+		alBufferData(buffer, data.format, data.data, data.samplerate);
+		data.dispose();
+		
+		//Prepare Source
+		source = alGenSources();
+		alSourcei(source, AL_BUFFER, buffer);
+		alSource3f(source, AL_POSITION, 0f, 0f, 0f);
+		alSource3f(source, AL_VELOCITY, 0f, 0f, 0f);
 	}
 	
 	public void play() {

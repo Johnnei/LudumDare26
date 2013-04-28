@@ -6,6 +6,7 @@ import org.johnnei.ld26.miniharvest.MiniHarvest;
 import org.johnnei.ld26.miniharvest.entity.Player;
 import org.johnnei.ld26.miniharvest.item.Item;
 import org.johnnei.ld26.miniharvest.item.ItemGoldCoin;
+import org.johnnei.ld26.miniharvest.item.ItemStack;
 
 public class SellShop {
 
@@ -27,7 +28,7 @@ public class SellShop {
 		int value = sellValues[item.getId()];
 		if(value > 0) {
 			player.addAmountToItem(item.getId(), -1);
-			player.addAmountToItem(ItemGoldCoin.ID, value);
+			player.addAmountToItem(new ItemStack(new ItemGoldCoin(), value));
 			SoundManager.getInstance().playSound(MiniHarvest.SOUND_SHOP_SELL);
 		}
 	}

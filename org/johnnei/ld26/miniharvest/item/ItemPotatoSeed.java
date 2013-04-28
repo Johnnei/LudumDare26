@@ -6,7 +6,7 @@ public class ItemPotatoSeed extends ItemSeed {
 	
 	@Override
 	public Seed getSeed() {
-		return new Seed(new ItemPotato(), 60000, 1, 2);
+		return new Seed(new ItemPotato(), 40000, 1, 2);
 	}
 
 	@Override

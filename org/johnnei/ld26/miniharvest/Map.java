@@ -1,8 +1,8 @@
 package org.johnnei.ld26.miniharvest;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import org.johnnei.ld26.engine.sound.SoundManager;
@@ -59,7 +59,7 @@ public class Map {
 	public void load(String name) {
 		BufferedReader input = null;
 		try {
-			input = new BufferedReader(new FileReader("bin/res/maps/" + name + ".mh"));
+			input = new BufferedReader(new InputStreamReader(Map.class.getResourceAsStream("/res/maps/" + name + ".mh")));
 			
 			//Load Map Tiles
 			for(int y = 0; y < HEIGHT; y++) {
@@ -96,16 +96,16 @@ public class Map {
 						
 					case 14: //Wheat Seed Stall Banner
 						//Custom Block Setting
-						spawnHorizontalShop(x, y, "wheat");
+						spawnHorizontalBanner(x, y, "wheat");
 						break;
 						
 					case 15: //Potato Seed Stall Banner
 						//Custom Block Setting
-						spawnVerticalShop(x, y, "potato");
+						spawnVerticalBanner(x, y, "potato");
 						break;
 						
 					case 16: //
-						spawnHorizontalShop(x, y, "sell");
+						spawnHorizontalBanner(x, y, "sell");
 						break;
 						
 					case 17:
@@ -113,7 +113,12 @@ public class Map {
 						break;
 						
 					case 18: //Plow Stall
-						spawnHorizontalShop(x, y, "plow");
+						spawnHorizontalBanner(x, y, "plow");
+						break;
+						
+					case 19: //Town Banner
+						spawnHorizontalBanner(x, y, "town");
+						break;
 					}
 					
 					if(block != null) {
@@ -172,7 +177,7 @@ public class Map {
 		}
 	}
 	
-	private void spawnHorizontalShop(int x, int y, String bannerName) {
+	private void spawnHorizontalBanner(int x, int y, String bannerName) {
 		setBlock(x - 2, y - 1, new BlockBanner(this, x - 2, y - 1, 0, bannerName));
 		setBlock(x - 1, y - 1, new BlockBanner(this, x - 1, y - 1, 1, bannerName));
 		setBlock(x    , y - 1, new BlockBanner(this, x    , y - 1, 2, bannerName));
@@ -181,7 +186,7 @@ public class Map {
 		setBlock(x    , y    , new BlockBanner(this, x    , y    , 5, bannerName));
 	}
 	
-	private void spawnVerticalShop(int x, int y, String bannerName) {
+	private void spawnVerticalBanner(int x, int y, String bannerName) {
 		setBlock(x - 1, y - 2, new BlockBanner(this, x - 1, y - 2, 0, bannerName, true));
 		setBlock(x - 1, y - 1, new BlockBanner(this, x - 1, y - 1, 1, bannerName, true));
 		setBlock(x - 1, y    , new BlockBanner(this, x - 1, y    , 2, bannerName, true));
