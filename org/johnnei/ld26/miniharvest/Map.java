@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.johnnei.ld26.engine.sound.SoundManager;
 import org.johnnei.ld26.miniharvest.entity.Entity;
@@ -57,6 +58,7 @@ public class Map {
 	}
 	
 	public void load(String name) {
+		Random random = new Random();
 		BufferedReader input = null;
 		try {
 			input = new BufferedReader(new InputStreamReader(Map.class.getResourceAsStream("/res/maps/" + name + ".mh")));
@@ -71,11 +73,11 @@ public class Map {
 					Block block = null;
 					switch(spot) {
 					case 0:
-						block = new BlockGrass(this, x, y);
+						block = new BlockGrass(random, this, x, y);
 						break;
 						
 					case 1:
-						block = new BlockDirt(this, x, y);
+						block = new BlockDirt(random, this, x, y);
 						break;
 						
 					case 2:
@@ -84,6 +86,7 @@ public class Map {
 					case 5:
 					case 6:
 					case 7:
+					case 8:
 						block = new BlockRoad(this, x, y, spot - 2);
 						break;
 						

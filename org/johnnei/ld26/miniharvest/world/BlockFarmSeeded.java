@@ -1,5 +1,7 @@
 package org.johnnei.ld26.miniharvest.world;
 
+import java.util.Random;
+
 import org.johnnei.ld26.engine.render.Texture;
 import org.johnnei.ld26.engine.render.VertexHelper;
 import org.johnnei.ld26.miniharvest.Map;
@@ -41,7 +43,7 @@ public class BlockFarmSeeded extends Block {
 		
 		if(lifetime >= seed.getGrowDuration()) {
 			//Destroy this block for use
-			map.setBlock(x, y, new BlockDirt(map, x, y));
+			map.setBlock(x, y, new BlockDirt(new Random(), map, x, y));
 			renderObject.delete();
 			//Drop items
 			int dropCount = seed.getDropCount();

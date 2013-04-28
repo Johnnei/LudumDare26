@@ -28,10 +28,11 @@ public class BlockFarmDirt extends Block {
 	public void onTick(int deltaMs) {
 		lifetime += deltaMs;
 		if(lifetime >= DECAY_TIME) {
-			if(new Random().nextBoolean()) {
-				map.setBlock(x, y, new BlockDirt(map, x, y));
+			Random random = new Random();
+			if(random.nextInt(100) < 10) {
+				map.setBlock(x, y, new BlockDirt(random, map, x, y));
 			} else {
-				map.setBlock(x, y, new BlockGrass(map, x, y));
+				map.setBlock(x, y, new BlockGrass(random, map, x, y));
 			}
 			renderObject.delete();
 		}
